@@ -3,6 +3,7 @@ import { status_jadwal } from "../../generated/prisma";
 export interface CreateJadwalInput {
   tanggal: Date;
   waktu_mulai: Date;
+  waktu_selesai: Date;
   nim: string;
   nama_ruangan: string;
   id_pendaftaran_kp: string;
@@ -59,7 +60,8 @@ export interface LogJadwalInput {
   ruangan_baru: string;
   keterangan: string;
   id_jadwal: string | null;
-  nip?: string | null;
+  nip_penguji_lama?: string | null;
+  nip_penguji_baru?: string | null;
 }
 
 export interface JadwalSayaParams {
