@@ -108,7 +108,7 @@ export default class MahasiswaService {
   public static async validasiPersyaratanSeminarKp(nim: string) {
     const pendaftaranKp = await MahasiswaRepository.getPendaftaranKP(nim);
 
-    const masihTerdaftarKP = pendaftaranKp && ["Baru", "Lanjut"].includes(pendaftaranKp.status || "") && pendaftaranKp.tanggal_selesai && new Date(pendaftaranKp.tanggal_selesai) >= new Date();
+    const masihTerdaftarKP = pendaftaranKp && ["Baru", "Lanjut"].includes(pendaftaranKp.status || "");
 
     const jumlahBimbingan = await MahasiswaRepository.countBimbinganByNIM(nim);
     const cukupBimbingan = jumlahBimbingan >= 5;
@@ -121,7 +121,7 @@ export default class MahasiswaService {
 
     return {
       masih_terdaftar_kp: masihTerdaftarKP,
-      minimal_lima_bimbingan: jumlahBimbingan,
+      minimal_lima_bimbingan: cukupBimbingan,
       daily_report_sudah_approve: semuaDailyReportDisetujui,
       sudah_mendapat_nilai_instansi: sudahNilaiInstansi,
       semua_syarat_terpenuhi: masihTerdaftarKP && cukupBimbingan && semuaDailyReportDisetujui && sudahNilaiInstansi,
