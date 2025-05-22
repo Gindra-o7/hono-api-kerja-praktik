@@ -95,7 +95,8 @@ model log_jadwal {
   keterangan        String?   @db.VarChar(255)
   created_at        DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
   id_jadwal         String?   @db.Uuid
-  nip               String?   @db.VarChar(20)
+  nip_penguji_lama  String?   @db.VarChar(20)
+  nip_penguji_baru  String?   @db.VarChar(20)
 }
 
 model mahasiswa {
