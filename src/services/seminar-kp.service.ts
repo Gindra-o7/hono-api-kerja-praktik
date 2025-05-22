@@ -28,11 +28,6 @@ export default class SeminarKpService {
       throw new APIError(`Waduh, anda belum memenuhi persyaratan untuk mengupload dokumen seminar KP! 😭`, 403);
     }
 
-    const { level_akses } = await MahasiswaRepository.getPendaftaranKP(nim);
-    if (level_akses < 5) {
-      throw new APIError(`Waduh, anda belum memiliki akses untuk mengupload dokumen seminar KP! 😭`, 403);
-    }
-
     await StepHelper.validasiStepAksesDokumen(jenis_dokumen, input.id_pendaftaran_kp);
 
     const existingDokumen = await SeminarKpRepository.getDokumenSeminarKPByJenisAndPendaftaranId(jenis_dokumen, input.id_pendaftaran_kp);
