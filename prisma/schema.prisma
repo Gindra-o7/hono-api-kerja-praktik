@@ -72,7 +72,7 @@ model instansi {
 
 model jadwal {
   id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tanggal           DateTime?       @default(dbgenerated("CURRENT_DATE")) @db.Date
+  tanggal           DateTime?       @db.Date
   waktu_mulai       DateTime?       @db.Timestamp(6)
   waktu_selesai     DateTime?       @db.Timestamp(6)
   status            status_jadwal?
@@ -93,7 +93,7 @@ model log_jadwal {
   ruangan_lama      String?   
   ruangan_baru      String  
   keterangan        String?   @db.VarChar(255)
-  created_at        DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  created_at        DateTime? @default(now()) @db.Timestamp(6)
   id_jadwal         String?   @db.Uuid
   nip_penguji_lama  String?   @db.VarChar(20)
   nip_penguji_baru  String?   @db.VarChar(20)
@@ -116,7 +116,7 @@ model mahasiswa {
 
 model nilai {
   id                            String                          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tanggal                       DateTime?                       @default(dbgenerated("CURRENT_DATE")) @db.Date
+  tanggal                       DateTime?                       @default(now()) @db.Timestamp(6)
   nilai_penguji                 Float?
   nilai_pembimbing              Float?
   nilai_instansi                Float?
@@ -193,7 +193,7 @@ model dokumen_seminar_kp {
   id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   jenis_dokumen     jenis_dokumen
   link_path         String          @db.VarChar(255)
-  tanggal_upload    DateTime?       @default(dbgenerated("CURRENT_DATE")) @db.Date
+  tanggal_upload    DateTime?       @default(now()) @db.Timestamp(6)
   status            status_dokumen? @default(Terkirim)
   komentar          String?         @db.VarChar(255)
   nim               String?         @db.VarChar(11)
@@ -221,7 +221,7 @@ model komponen_penilaian_pembimbing {
   bimbingan_sikap      Float?
   kualitas_laporan     Float?
   catatan              String?
-  created_at           DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  created_at           DateTime? @default(now()) @db.Timestamp(6)
   id_nilai             String? @unique @db.Uuid
   nilai                nilai?  @relation(fields: [id_nilai], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -232,7 +232,7 @@ model komponen_penilaian_penguji {
   kemampuan_presentasi Float?
   kesesuaian_urgensi   Float?
   catatan              String?
-  created_at           DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  created_at           DateTime? @default(now()) @db.Timestamp(6)
   id_nilai             String? @unique @db.Uuid
   nilai                nilai?  @relation(fields: [id_nilai], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -247,7 +247,7 @@ model tahun_ajaran {
 model validasi_nilai {
   id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   is_approve     Boolean?         @default(false)
-  created_at     DateTime?        @default(dbgenerated("CURRENT_DATE")) @db.Date
+  created_at     DateTime?        @default(now()) @db.Timestamp(6)
   id_nilai       String?          @unique @db.Uuid
 
   nilai          nilai?           @relation(fields: [id_nilai], references: [id], onDelete: NoAction, onUpdate: NoAction)
