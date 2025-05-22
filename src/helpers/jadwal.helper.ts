@@ -38,8 +38,10 @@ export default class JadwalHelper {
   }
 
   public static formatWaktu(date: Date): string {
-    const now = new Date();
-    const diffInMilliseconds = now.getTime() - date.getTime();
+    const now = DateHelper.toJakartaTime(new Date())
+    const uploadWaktuJakarta = DateHelper.toJakartaTime(date)
+
+    const diffInMilliseconds = now.getTime() - uploadWaktuJakarta.getTime();
 
     const seconds = Math.floor(diffInMilliseconds / 1000);
     const minutes = Math.floor(seconds / 60);
