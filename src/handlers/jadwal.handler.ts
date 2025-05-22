@@ -71,4 +71,13 @@ export default class JadwalHandler {
 
     return c.json(allJadwal)
   }
+
+  public static async getLogJadwal(c: Context) {
+    const tahunAjaranIdParam = c.req.query('tahun_ajaran_id');
+    const tahunAjaranId = tahunAjaranIdParam ? parseInt(tahunAjaranIdParam) : 0;
+
+    const logJadwal = await JadwalService.getLogJadwal(tahunAjaranId)
+
+    return c.json(logJadwal)
+  }
 }
