@@ -129,7 +129,8 @@ export default class JadwalRepository {
         ruangan_baru: data.ruangan_baru,
         keterangan: data.keterangan,
         id_jadwal: data.id_jadwal,
-        nip: data.nip || null,
+        nip_penguji_baru: data.nip_penguji_baru,
+        nip_penguji_lama: data.nip_penguji_lama,
         created_at: new Date(),
       },
     });
@@ -404,7 +405,8 @@ export default class JadwalRepository {
         ruangan_baru: true,
         keterangan: true,
         created_at: true,
-        nip: true,
+        nip_penguji_lama: true,
+        nip_penguji_baru: true,
         id_jadwal: true,
       },
       orderBy: {
