@@ -10,7 +10,7 @@ import { string } from "zod";
 import prisma from "../infrastructures/db.infrastructure";
 
 export default class NilaiService {
-  public static async createNilaiPenguji(input: NilaiPengujiInput, id?: string, email?: string) {
+  public static async createUpdateNilaiPenguji(input: NilaiPengujiInput, id?: string, email?: string) {
     if (input.idJadwalSeminar) {
       const jadwal = await NilaiRepository.getJadwalById(input.idJadwalSeminar);
       if (!jadwal) {
@@ -90,7 +90,7 @@ export default class NilaiService {
     };
   }
 
-  public static async createNilaiPembimbing(input: NilaiPembimbingInput, id?: string, email?: string) {
+  public static async createUpdateNilaiPembimbing(input: NilaiPembimbingInput, id?: string, email?: string) {
     if (input.idJadwalSeminar) {
       const jadwal = await NilaiRepository.getJadwalById(input.idJadwalSeminar);
       if (!jadwal) {
