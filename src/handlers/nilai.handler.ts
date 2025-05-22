@@ -4,7 +4,7 @@ import NilaiHelper from "../helpers/nilai.helper";
 import { APIError } from "../utils/api-error.util";
 
 export default class NilaiHandler {
-  public static async createNilaiPenguji(c: Context) {
+  public static async createUpdateNilaiPenguji(c: Context) {
     const body = await c.req.json();
 
     if (!body.nim) {
@@ -20,7 +20,7 @@ export default class NilaiHandler {
       idJadwalSeminar: body.idJadwalSeminar,
     };
 
-    const result = await NilaiService.createNilaiPenguji(inputData, body.id);
+    const result = await NilaiService.createUpdateNilaiPenguji(inputData, body.id);
     return c.json(
       {
         message: "Nilai penguji berhasil disimpan",
@@ -30,7 +30,7 @@ export default class NilaiHandler {
     );
   }
 
-  public static async createNilaiPembimbing(c: Context) {
+  public static async createUpdateNilaiPembimbing(c: Context) {
     const body = await c.req.json();
 
     if (!body.nim) {
@@ -46,7 +46,7 @@ export default class NilaiHandler {
       idJadwalSeminar: body.idJadwalSeminar,
     };
 
-    const result = await NilaiService.createNilaiPembimbing(inputData, body.id);
+    const result = await NilaiService.createUpdateNilaiPembimbing(inputData, body.id);
     return c.json(
       {
         message: "Nilai pembimbing berhasil disimpan",
