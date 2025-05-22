@@ -2,7 +2,17 @@ import prisma from "../infrastructures/db.infrastructure";
 import { APIError } from "../utils/api-error.util";
 
 export default class NilaiRepository {
-  public static async createNilaiPenguji(id: string, penguasaanKeilmuan: number, kemampuanPresentasi: number, kesesuaianUrgensi: number, catatan: string | null, nilaiPenguji: number, nim: string, nip: string, idJadwalSeminar?: string) {
+  public static async createNilaiPenguji(
+    id: string, 
+    penguasaanKeilmuan: number, 
+    kemampuanPresentasi: number, 
+    kesesuaianUrgensi: number, 
+    catatan: string | null, 
+    nilaiPenguji: number, 
+    nim: string, 
+    nip: string, 
+    idJadwalSeminar?: string
+  ) {
     const dosen = await prisma.dosen.findUnique({
       where: { nip },
     });
@@ -93,7 +103,16 @@ export default class NilaiRepository {
     return nilai;
   }
 
-  public static async createNilaiPembimbing(id: string, penyelesaianMasalah: number, bimbinganSikap: number, kualitasLaporan: number, catatan: string | null, nilaiPembimbing: number, nim: string, nip: string, idJadwalSeminar?: string) {
+  public static async createNilaiPembimbing(
+    id: string, 
+    penyelesaianMasalah: number, 
+    bimbinganSikap: number, 
+    kualitasLaporan: number, 
+    catatan: string | null, 
+    nilaiPembimbing: number, 
+    nim: string, 
+    nip: string, 
+    idJadwalSeminar?: string) {
     const dosen = await prisma.dosen.findUnique({
       where: { nip },
     });
