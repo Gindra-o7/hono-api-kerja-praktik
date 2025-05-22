@@ -217,6 +217,10 @@ export default class NilaiRepository {
 
   public static async getTahunAjaranSekarang() {
     return prisma.tahun_ajaran.findFirst({
+      select: {
+        id: true,
+        nama: true,
+      },
       orderBy: {
         id: "desc",
       },
