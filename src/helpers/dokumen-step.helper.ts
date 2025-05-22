@@ -53,6 +53,7 @@ export default class StepHelper {
         break;
       case 5:
         dokumenList = STEP_5;
+        break;
       default:
         return false;
     }
