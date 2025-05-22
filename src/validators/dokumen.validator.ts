@@ -1,49 +1,48 @@
 import { z } from "zod";
 import { jenis_dokumen, status_dokumen } from "../generated/prisma";
 
-const validateLinkPath = (value: string, ctx: z.RefinementCtx, jenisDokumen: jenis_dokumen) => {
+export const validateLinkPath = (value: string, jenisDokumen: jenis_dokumen) => {
   if (jenisDokumen === jenis_dokumen.ID_SURAT_UNDANGAN) {
     if (value.length > 10) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "ID Surat Undangan tidak boleh lebih dari 10 karakter",
-      });
-      return false;
+      return "ID Surat Undangan tidak boleh lebih dari 10 karakter";
     }
-    return true;
+    return null;
   }
 
   const gdriveLinkRegex = /^https:\/\/drive\.google\.com\/(file\/d\/|drive\/folders\/|open\?id=)([a-zA-Z0-9_-]+)(\/?|\?usp=sharing|\&authuser=0)/;
 
   if (!gdriveLinkRegex.test(value)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Link harus dari Google Drive dengan format yang valid",
-    });
-    return false;
+    return "Link harus dari Google Drive dengan format yang valid";
   }
 
-  if (value.includes('file/d/')) {
-    const allowedExtensions = ['.pdf', '.doc', '.docx'];
-    const hasValidExtension = allowedExtensions.some(ext => value.toLowerCase().includes(ext));
-
-    if (!hasValidExtension) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "File harus berformat PDF, DOC, DOCX, XLS, XLSX, PPT, atau PPTX",
-      });
-      return false;
-    }
+  if (!value.includes('usp=sharing') && !value.includes('/view') && !value.includes('/edit')) {
+    return "Link Google Drive harus dapat diakses publik (pastikan sudah di-share dengan 'Anyone with the link')";
   }
-  return true;
+  
+  return null;
 };
 
 export const createDokumenSeminarKpSchema = z.object({
   link_path: z
     .string()
-    .superRefine((val, ctx) => {
+    .min(1, "Link/Path tidak boleh kosong")
+    .refine((val) => {
       return true;
     }),
+  nim: z.string().min(1, "NIM tidak boleh kosong"),
+  id_pendaftaran_kp: z.string().uuid("ID pendaftaran KP harus berupa UUID")
+});
+
+export const createDokumenSeminarKpWithJenisSchema = (jenis: jenis_dokumen) => z.object({
+  link_path: z
+    .string()
+    .min(1, "Link/Path tidak boleh kosong")
+    .refine((val) => {
+      const error = validateLinkPath(val, jenis);
+      return error === null;
+    }, (val) => ({
+      message: validateLinkPath(val, jenis) || "Validasi gagal"
+    })),
   nim: z.string().min(1, "NIM tidak boleh kosong"),
   id_pendaftaran_kp: z.string().uuid("ID pendaftaran KP harus berupa UUID")
 });
