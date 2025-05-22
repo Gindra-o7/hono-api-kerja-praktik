@@ -392,4 +392,24 @@ export default class NilaiRepository {
       },
     });
   }
+
+  public static async findNilaiByJadwalId(jadwal_id: string) {
+    const nilai = await prisma.nilai.findFirst({
+      where: {
+        id_jadwal_seminar: jadwal_id,
+      },
+      select: {
+        nilai_pembimbing: true,
+        nilai_penguji: true,
+        nilai_instansi: true,
+        nilai_akhir: true,
+        komponen_penilaian_pembimbing: true,
+        komponen_penilaian_penguji: true,
+        komponen_penilaian_instansi: true,
+        validasi_nilai: true,
+      }
+    })
+
+    return nilai
+  }
 }
