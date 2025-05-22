@@ -38,38 +38,6 @@ export default class MahasiswaService {
     };
   }
 
-  public static async verifikasiKelayakanSeminar(nim: string): Promise<{
-    eligible: boolean;
-    pendaftaran_id: string | null;
-    errors: string[];
-  }> {
-    const errors: string[] = [];
-    let pendaftaran_id: string | null = null;
-
-    try {
-      const { id, level_akses } = await MahasiswaRepository.getPendaftaranKP(nim);
-      let pendaftaran_id = id;
-      if (level_akses < 5) {
-        throw new APIError(`Level Akses terlalu rendah, sekarang masih level ${level_akses}, harus mencapai level 5`);
-      }
-    } catch (err: any) {
-      errors.push(err.message || "Could not verify KP registration status");
-      return { eligible: false, pendaftaran_id: null, errors };
-    }
-
-    const { canScheduleSeminar, missingOrInvalidDocuments } = await MahasiswaService.checkSeminarDocumentsValidation(nim);
-
-    if (!canScheduleSeminar) {
-      errors.push(`Missing or invalid documents: ${missingOrInvalidDocuments.join(", ")}`);
-    }
-
-    return {
-      eligible: errors.length === 0,
-      pendaftaran_id,
-      errors,
-    };
-  }
-
   public static async validateMahasiswaExists(nim: string): Promise<mahasiswa> {
     const mahasiswa = await MahasiswaRepository.findByNIM({ nim });
     if (!mahasiswa) {
@@ -101,9 +69,7 @@ export default class MahasiswaService {
     };
   }
 
-  public static async validasiMurojaah(email: string) {
-    
-  }
+  public static async validasiMurojaah(email: string) {}
 
   public static async validasiPersyaratanSeminarKp(nim: string) {
     const pendaftaranKp = await MahasiswaRepository.getPendaftaranKP(nim);
@@ -112,6 +78,11 @@ export default class MahasiswaService {
 
     const jumlahBimbingan = await MahasiswaRepository.countBimbinganByNIM(nim);
     const cukupBimbingan = jumlahBimbingan >= 5;
+
+    const { level_akses } = await MahasiswaRepository.getPendaftaranKP(nim);
+    if (level_akses < 5) {
+      throw new APIError(`Waduh, anda belum memiliki akses untuk mengupload dokumen seminar KP! 😭`, 403);
+    }
 
     const dailyReports = await MahasiswaRepository.getDailyReportsByNIM(nim);
     const semuaDailyReportDisetujui = dailyReports.length > 0 && dailyReports.every((report) => report.status === "Disetujui");
