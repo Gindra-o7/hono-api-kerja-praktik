@@ -169,13 +169,7 @@ export default class JadwalService {
       }
     }
 
-    const isRoomAvailable = await JadwalRepository.checkRuanganAvailability(
-      nama_ruangan, 
-      tanggal, 
-      waktu_mulai, 
-      waktu_selesai, 
-      data.id
-    );
+    const isRoomAvailable = await JadwalRepository.checkRuanganAvailability(nama_ruangan, tanggal, waktu_mulai, waktu_selesai, data.id);
 
     if (!isRoomAvailable) {
       throw new APIError("Ruangan tidak tersedia pada waktu yang dipilih", 400);
@@ -267,6 +261,26 @@ export default class JadwalService {
         minggu_ini: mingguIni,
       },
       tahun_ajaran: { ...tahunAjaran, nama: tahunAjaran.nama ?? "Unknown" },
+    };
+  }
+
+  public static async getLogJadwal(tahunAjaranId: number = 1) {
+    if (!tahunAjaranId) {
+      const tahunAjaranSekarang = await JadwalRepository.getTahunAjaran();
+      if (!tahunAjaranSekarang) {
+        throw new APIError(`Waduh, Tahun ajaran tidak ditemukan`);
+      }
+      tahunAjaranId = tahunAjaranSekarang.id;
+    }
+
+    const result = await JadwalRepository.getLogJadwal(tahunAjaranId);
+    if (!result.logJadwal || result.logJadwal.length === 0) {
+      throw new APIError(`Waduh, Log jadwal tidak ditemukan, 😭`, 404);
+    }
+
+    return {
+      logJadwal: result.logJadwalWithJadwal,
+      tahunAjaran: result.tahunAjaran,
     };
   }
 }
