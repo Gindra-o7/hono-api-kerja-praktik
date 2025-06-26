@@ -63,6 +63,23 @@ model dosen {
   pembimbing     pendaftaran_kp[] @relation("pembimbing")
   penguji        pendaftaran_kp[] @relation("penguji")
   mahasiswa      mahasiswa[]
+  keahlian    keahlian_dosen[]
+}
+
+model keahlian_dosen {
+  nip            String @db.VarChar(20)
+  keahlian_id    Int
+
+  dosen          dosen? @relation(fields: [nip], references: [nip])
+  keahlian       keahlian? @relation(fields: [keahlian_id], references: [id])
+
+  @@id([nip, keahlian_id])
+}
+
+model keahlian {
+  id             Int @id @default(autoincrement())
+  nama_keahlian  String @db.VarChar(255)
+  dosen          keahlian_dosen[]
 }
 
 model instansi {
