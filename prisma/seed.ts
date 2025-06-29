@@ -15,7 +15,19 @@ async function main() {
 		skipDuplicates: true,
 	});
 
+	const keahlian = await prisma.keahlian.createMany({
+		data: [
+			{ nama_keahlian: "Kecerdasan Buatan" },
+			{ nama_keahlian: "Sistem Cerdas" },
+			{ nama_keahlian: "Sistem Informasi" },
+			{ nama_keahlian: "Sistem Multimedia" },
+			{ nama_keahlian: "Sistem Rekomendasi" },
+		],
+		skipDuplicates: true,
+	});
+
 	console.log("[DEBUG] Result of inserted ruangan createMany:", result.count > 0 ? result : "Data was inserted previously, no new data inserted.");
+	console.log("[DEBUG] Keahlian of inserted keahlian createMany:", keahlian.count > 0 ? keahlian : "Data was inserted previously, no new data inserted.");
 }
 
 main()
