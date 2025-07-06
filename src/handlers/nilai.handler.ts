@@ -68,7 +68,7 @@ export default class NilaiHandler {
 
   public static async getAllNilai(c: Context) {
     const { email } = c.get("user");
-    if (!email) throw new APIError("Waduh, email kamu kosong cuy! 😭", 404);
+    if (!email) throw new APIError(`Email kosong!`, 404);
 
     const tahunAjaranIdParam = c.req.query("tahun_ajaran_id");
     const tahunAjaranId = tahunAjaranIdParam ? parseInt(tahunAjaranIdParam) : 0;
@@ -79,7 +79,7 @@ export default class NilaiHandler {
 
   public static async createValidasiNilai(c: Context) {
     const { email } = c.get("user");
-    if (!email) throw new APIError("Waduh, email kamu kosong cuy! 😭", 404);
+    if (!email) throw new APIError(`Email kosong!`, 404);
 
     const body = await c.req.json();
     const result = await NilaiService.createValidasiNilai(body.idNilai);

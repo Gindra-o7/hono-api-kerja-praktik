@@ -43,7 +43,7 @@ export default class MahasiswaRepository {
         });
     
         if (!result) {
-            throw new APIError(`Waduh, mahasiswa tidak ditemukan! 😭`, 404);
+            throw new APIError(`Mahasiswa tidak ditemukan!`, 404);
         }
     
         return result;
@@ -66,7 +66,7 @@ export default class MahasiswaRepository {
         });
     
         if (!result) {
-            throw new APIError(`Waduh, mahasiswa belum mendaftar KP nih! 😭`, 404);
+            throw new APIError(`Mahasiswa belum mendaftar KP nih!`, 404);
         }
         return result;
     }

@@ -14,11 +14,11 @@ export default class NilaiService {
     if (input.idJadwalSeminar) {
       const jadwal = await NilaiRepository.getJadwalById(input.idJadwalSeminar);
       if (!jadwal) {
-        throw new APIError(`Waduh, Jadwal tidak ditemukan ni! 😭`, 404);
+        throw new APIError(`Jadwal tidak ditemukan!`, 404);
       }
 
       if (!NilaiHelper.canInputNilai(jadwal.waktu_mulai)) {
-        throw new APIError(`Waduh, Nilai penguji tidak bisa diinput sebelum seminar dimulai! 😭`, 400);
+        throw new APIError(`Nilai tidak bisa diinputkan sebelum seminar dimulai!`, 400);
       }
     }
 
@@ -27,27 +27,25 @@ export default class NilaiService {
     if (email) {
       const dosen = await DosenRepository.getDosenByEmail(email);
       if (!dosen) {
-        throw new APIError(`Waduh, Email Dosen tidak ditemukan ni! 😭`, 404);
+        throw new APIError(`Email dosen tidak ditemukan!`, 404);
       }
 
       const pendaftaranKp = await DosenRepository.getPendaftaranKpDosen(input.nim);
       if (!pendaftaranKp) {
-        throw new APIError(`Waduh, Pendaftaran KP untuk mahasiswa dengan NIM ${input.nim} tidak ditemukan`, 404);
+        throw new APIError(`Pendaftaran KP untuk mahasiswa dengan NIM ${input.nim} tidak ditemukan`, 404);
       }
 
       if (pendaftaranKp.nip_penguji !== dosen.nip) {
-        throw new APIError(`Waduh, Anda bukan penguji untuk mahasiswa ini`, 403);
+        throw new APIError(`Maaf, Anda bukan dosen penguji KP untuk mahasiswa ini!`, 403);
       }
-
       nipPenguji = dosen.nip;
     } else {
       const pendaftaranKp = await DosenRepository.getPendaftaranKpDosen(input.nim);
       if (!pendaftaranKp) {
-        throw new APIError(`Waduh, Pendaftaran KP untuk mahasiswa dengan NIM ${input.nim} tidak ditemukan`, 404);
+        throw new APIError(`Pendaftaran KP untuk mahasiswa dengan NIM ${input.nim} tidak ditemukan`, 404);
       }
-
       if (!pendaftaranKp.nip_penguji) {
-        throw new APIError(`Waduh, Dosen tersebut bukan penguji untuk mahasiswa ini`, 403);
+        throw new APIError(`Maaf, Anda bukan dosen penguji KP untuk mahasiswa ini!`, 403);
       }
 
       nipPenguji = pendaftaranKp.nip_penguji;
@@ -94,11 +92,11 @@ export default class NilaiService {
     if (input.idJadwalSeminar) {
       const jadwal = await NilaiRepository.getJadwalById(input.idJadwalSeminar);
       if (!jadwal) {
-        throw new APIError(`Waduh, Jadwal tidak ditemukan ni! 😭`, 404);
+        throw new APIError(`Jadwal tidak ditemukan!`, 404);
       }
 
       if (!NilaiHelper.canInputNilai(jadwal.waktu_mulai)) {
-        throw new APIError(`Waduh, Nilai pembimbing tidak bisa diinput sebelum seminar dimulai! 😭`, 400);
+        throw new APIError(`Nilai tidak bisa diinputkan sebelum seminar dimulai!`, 400);
       }
     }
 
@@ -107,27 +105,27 @@ export default class NilaiService {
     if (email) {
       const dosen = await DosenRepository.getDosenByEmail(email);
       if (!dosen) {
-        throw new APIError(`Waduh, Email Dosen tidak ditemukan ni! 😭`, 404);
+        throw new APIError(`Email Dosen tidak ditemukan!`, 404);
       }
 
       const pendaftaranKp = await DosenRepository.getPendaftaranKpDosen(input.nim);
       if (!pendaftaranKp) {
-        throw new APIError(`Waduh, Pendaftaran KP untuk mahasiswa dengan NIM ${input.nim} tidak ditemukan`, 404);
+        throw new APIError(`Pendaftaran KP untuk mahasiswa dengan NIM ${input.nim} tidak ditemukan`, 404);
       }
 
       if (pendaftaranKp.nip_pembimbing !== dosen.nip) {
-        throw new APIError(`Waduh, Anda bukan pembimbing untuk mahasiswa ini`, 403);
+        throw new APIError(`Maaf, Anda bukan dosen pembimbing KP untuk mahasiswa ini!`, 403);
       }
 
       nipPembimbing = dosen.nip;
     } else {
       const pendaftaranKp = await DosenRepository.getPendaftaranKpDosen(input.nim);
       if (!pendaftaranKp) {
-        throw new APIError(`Waduh, Pendaftaran KP untuk mahasiswa dengan NIM ${input.nim} tidak ditemukan`, 404);
+        throw new APIError(`Pendaftaran KP untuk mahasiswa dengan NIM ${input.nim} tidak ditemukan`, 404);
       }
 
       if (!pendaftaranKp.nip_pembimbing) {
-        throw new APIError(`Waduh, Dosen bukan pembimbing untuk mahasiswa ini`, 403);
+        throw new APIError(`Maaf, Anda bukan dosen pembimbing KP untuk mahasiswa ini!`, 403);
       }
 
       nipPembimbing = pendaftaranKp.nip_pembimbing;
@@ -173,7 +171,7 @@ export default class NilaiService {
   public static async updateNilaiAkhir(id: string) {
     const nilai = await NilaiRepository.getNilaiById(id);
     if (!nilai) {
-      throw new APIError(`Waduh, Nilai tidak ditemukan ni! 😭`, 404);
+      throw new APIError(`Nilai tidak ditemukan!`, 404);
     }
 
     const nilaiPenguji = nilai.nilai_penguji ?? 0;
@@ -330,28 +328,28 @@ export default class NilaiService {
   public static async createValidasiNilai(idNilai: string) {
     const nilai = await NilaiRepository.getNilaiById(idNilai);
     if (!nilai) {
-      throw new APIError(`Waduh, Nilai tidak ditemukan ni! 😭`, 404);
+      throw new APIError(`Nilai tidak ditemukan!`, 404);
     }
 
     const validasi = await NilaiRepository.getValidasiNilaiById(idNilai);
     if (validasi && validasi.is_approve) {
-      throw new APIError(`Waduh, Nilai ini sudah divalidasi sebelumnya! 😭`, 400);
+      throw new APIError(`Nilai ini sudah divalidasi!`, 400);
     }
 
     let pendaftaran_kp;
     if (nilai.nim) {
       pendaftaran_kp = await DosenRepository.getPendaftaranKpDosen(nilai.nim);
       if (!pendaftaran_kp) {
-        throw new APIError(`Waduh, Pendaftaran KP untuk mahasiswa dengan NIM ${nilai.nim} tidak ditemukan`, 404);
+        throw new APIError(`Pendaftaran KP untuk mahasiswa dengan NIM ${nilai.nim} tidak ditemukan`, 404);
       }
     } else {
-      throw new APIError(`Waduh, Nilai tidak ditemukan ni! 😭`, 404);
+      throw new APIError(`Nilai tidak ditemukan!`, 404);
     }
 
     const validasiStatus = NilaiHelper.canValidateNilai(nilai.nilai_penguji, nilai.nilai_pembimbing, nilai.nilai_instansi, pendaftaran_kp.dokumen_seminar_kp.filter((doc) => doc.status !== null) as { status: status_dokumen }[]);
 
     if (!validasiStatus.valid) {
-      throw new APIError(`Waduh, ${validasiStatus.message}! 😭`, 400);
+      throw new APIError(`${validasiStatus.message}!`, 400);
     }
 
     let validasiNilai;

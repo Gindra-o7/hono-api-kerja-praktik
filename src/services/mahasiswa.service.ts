@@ -47,7 +47,7 @@ export default class MahasiswaService {
   public static async validateMahasiswaExists(nim: string): Promise<mahasiswa> {
     const mahasiswa = await MahasiswaRepository.findByNIM({ nim });
     if (!mahasiswa) {
-      throw new APIError(`Waduh, mahasiswa tidak ditemukan! 😭`, 404);
+      throw new APIError(`Mahasiswa tidak ditemukan!`, 404);
     }
     return mahasiswa;
   }

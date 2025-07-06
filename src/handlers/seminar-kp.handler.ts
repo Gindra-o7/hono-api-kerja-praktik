@@ -9,7 +9,7 @@ import SeminarKpService from "../services/seminar-kp.service";
 export default class SeminarKPHandler {
   public static async postDokumenSeminarKP(c: Context, jenis: jenis_dokumen) {
     const { email } = c.get("user");
-    if (!email) throw new APIError("Waduh, email kamu kosong cuy! 😭", 404);
+    if (!email) throw new APIError(`Email kosong!`, 404);
 
     const body = await c.req.json();
 
@@ -21,14 +21,14 @@ export default class SeminarKPHandler {
 
   public static async getDokumenSeminarKPSaya(c: Context) {
     const { email } = c.get("user");
-    if (!email) throw new APIError("Waduh, email kamu kosong cuy! 😭", 404);
+    if (!email) throw new APIError(`Email kosong!`, 404);
 
     return c.json(await SeminarKpService.getDataSeminarKpSaya(email));
   }
 
   public static async getAllDokumenSeminarKP(c: Context) {
     const { email } = c.get("user");
-    if (!email) throw new APIError("Waduh, email kamu kosong cuy! 😭", 404);
+    if (!email) throw new APIError(`Email kosong!`, 404);
 
     const tahunAjaranIdParam = c.req.query("tahun_ajaran_id");
     const tahunAjaranId = tahunAjaranIdParam ? parseInt(tahunAjaranIdParam) : 0;
@@ -41,7 +41,7 @@ export default class SeminarKPHandler {
   public static async getDokumenSeminarKPByNIM(c: Context) {
     const nim = c.req.param("nim");
     if (!nim) {
-      throw new APIError("Waduh, NIM tidak ditemukan! 😭", 400);
+      throw new APIError(`Email kosong!`, 400);
     }
 
     return c.json(await SeminarKpService.getDokumenSeminarKPByNIM(nim));
@@ -49,7 +49,7 @@ export default class SeminarKPHandler {
 
   public static async postTerimaDokumenSeminarKP(c: Context) {
     const { email } = c.get("user");
-    if (!email) throw new APIError("Waduh, email kamu kosong cuy! 😭", 404);
+    if (!email) throw new APIError(`Email kosong!`, 404);
 
     const body = await c.req.json();
     const { id, komentar } = body;
@@ -63,7 +63,7 @@ export default class SeminarKPHandler {
 
   public static async postTolakDokumenSeminarKP(c: Context) {
     const { email } = c.get("user");
-    if (!email) throw new APIError("Waduh, email kamu kosong cuy! 😭", 404);
+    if (!email) throw new APIError(`Email kosong!`, 404);
 
     const body = await c.req.json();
     const { id, komentar } = body;

@@ -33,7 +33,7 @@ export default class JadwalRepository {
 
   public static async putJadwal(data: UpdateJadwalInput): Promise<jadwal> {
     if (!data.id) {
-      throw new APIError("Waduh, ID jadwal diperlukan! 😭", 400);
+      throw new APIError("ID jadwal diperlukan!", 400);
     }
 
     const existingJadwal = await prisma.jadwal.findUnique({
@@ -43,7 +43,7 @@ export default class JadwalRepository {
     });
 
     if (!existingJadwal) {
-      throw new APIError("Waduh, Jadwal tidak ditemukan! 😭", 404);
+      throw new APIError("Jadwal tidak ditemukan!", 404);
     }
 
     const updateData: any = {

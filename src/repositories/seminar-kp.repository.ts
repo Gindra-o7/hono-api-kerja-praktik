@@ -287,13 +287,12 @@ export default class SeminarKpRepository {
 
   public static async findNIMByPendaftaranKp(id_pendaftaran_kp: string) {
     if (!id_pendaftaran_kp || id_pendaftaran_kp === "") {
-      return null; // Return null instead of querying with an invalid UUID
+      return null;
     }
 
-    // Optional: Add UUID format validation
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(id_pendaftaran_kp)) {
-      return null; // Or throw new APIError("Invalid UUID format for id_pendaftaran_kp", 400);
+      return null;
     }
 
     return await prisma.pendaftaran_kp.findUnique({

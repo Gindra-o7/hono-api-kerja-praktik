@@ -18,7 +18,7 @@ export default class NilaiRepository {
     });
 
     if (!dosen) {
-      throw new APIError(`Waduh, Dosen dengan NIP ${nip} tidak ditemukan! 😭`, 404);
+      throw new APIError(`Dosen dengan NIP ${nip} tidak ditemukan!`, 404);
     }
 
     const pendaftaranKp = await prisma.pendaftaran_kp.findFirst({
@@ -31,11 +31,7 @@ export default class NilaiRepository {
     });
 
     if (!pendaftaranKp) {
-      throw new APIError(`Waduh, Mahasiswa dengan NIM ${nim} belum mendaftara KP ni! 😭`, 404);
-    }
-
-    if (pendaftaranKp.nip_penguji !== nip) {
-      throw new APIError(`Waduh, Dosen dengan NIP ${nip} bukan penguji untuk mahasiswa ini! 😭`, 403);
+      throw new APIError(`Mahasiswa dengan NIM ${nim} belum mendaftara KP!`, 404);
     }
 
     const existingNilai = await prisma.nilai.findFirst({
@@ -47,7 +43,7 @@ export default class NilaiRepository {
     });
 
     if (existingNilai?.validasi_nilai?.is_approve === true) {
-      throw new APIError(`Waduh, Nilai ini sudah divalidasi! 😭`, 400);
+      throw new APIError(`Nilai ini sudah divalidasi!`, 400);
     }
 
     let nilai;
@@ -123,7 +119,7 @@ export default class NilaiRepository {
     });
 
     if (!dosen) {
-      throw new APIError(`Waduh, Dosen dengan NIP ${nip} tidak ditemukan`, 404);
+      throw new APIError(`Dosen dengan NIP ${nip} tidak ditemukan!`, 404);
     }
 
     const pendaftaranKp = await prisma.pendaftaran_kp.findFirst({
@@ -136,11 +132,7 @@ export default class NilaiRepository {
     });
 
     if (!pendaftaranKp) {
-      throw new APIError(`Waduh, Mahasiswa dengan NIM ${nim} belum mendaftara KP ni! 😭`, 404);
-    }
-
-    if (pendaftaranKp.nip_pembimbing !== nip) {
-      throw new APIError(`Waduh, Dosen dengan NIP ${nip} bukan pembimbing untuk mahasiswa ini! 😭`, 403);
+      throw new APIError(`Mahasiswa dengan NIM ${nim} belum mendaftar KP!`, 404);
     }
 
     const existingNilai = await prisma.nilai.findFirst({
@@ -152,7 +144,7 @@ export default class NilaiRepository {
     });
 
     if (existingNilai?.validasi_nilai?.is_approve === true) {
-      throw new APIError(`Waduh, Nilai ini sudah divalidasi! 😭`, 400);
+      throw new APIError(`Nilai ini sudah divalidasi!`, 400);
     }
 
     let nilai;
@@ -283,12 +275,12 @@ export default class NilaiRepository {
       });
 
       if (!tahunAjaranSekarang) {
-        throw new APIError(`Waduh, Tahun ajaran tidak ditemukan, 😭`, 404);
+        throw new APIError(`Tahun ajaran tidak ditemukan`, 404);
       }
     } else {
       tahunAjaranSekarang = await this.getTahunAjaranSekarang();
       if (!tahunAjaranSekarang) {
-        throw new APIError(`Waduh, Tahun ajaran tidak ditemukan, 😭`, 404);
+        throw new APIError(`Tahun ajaran tidak ditemukan`, 404);
       }
     }
 

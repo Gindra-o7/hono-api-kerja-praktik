@@ -107,7 +107,7 @@ export default class SeminarKpService {
 
     return {
       response: true,
-      message: "Berhasil mendapatkan data seminar KP!, 😁",
+      message: "Berhasil mendapatkan data seminar KP",
       data: {
         persyaratan_seminar_kp: validasiPersyaratan,
         ...dokumenData,
@@ -126,7 +126,7 @@ export default class SeminarKpService {
     if (tahunAjaranId <= 0) {
       const tahunAjaranSekarang = await JadwalRepository.getTahunAjaran();
       if (!tahunAjaranSekarang) {
-        throw new APIError("Waduh, Tahun ajaran tidak ditemukan! 😭", 404);
+        throw new APIError("Tahun ajaran tidak ditemukan!", 404);
       }
       tahunAjaranId = tahunAjaranSekarang.id;
     }
@@ -134,7 +134,7 @@ export default class SeminarKpService {
     const allDokumen = await SeminarKpRepository.getAllDokumenSeminarKP(tahunAjaranId);
 
     if (!allDokumen) {
-      throw new APIError(`Waduh, Dokumen tidak ditemukan! 😭`, 404);
+      throw new APIError(`Dokumen tidak ditemukan`, 404);
     }
 
     const stats = {
@@ -237,7 +237,7 @@ export default class SeminarKpService {
 
     return {
       response: true,
-      message: "Berhasil mendapatkan seluruh dokumen mahasiswa! 😁",
+      message: "Berhasil mendapatkan seluruh dokumen mahasiswa!",
       data: {
         statistics: stats,
         mahasiswa: processedData,
@@ -253,11 +253,11 @@ export default class SeminarKpService {
     const mahasiswa = await SeminarKpRepository.getMahasiswaSeminarKPByNIM(nim);
 
     if (!mahasiswa) {
-      throw new APIError(`Waduh, Mahasiswa dengan NIM ${nim} tidak ditemukan! 😭`, 404);
+      throw new APIError(`Mahasiswa dengan NIM ${nim} tidak ditemukan!`, 404);
     }
 
     if (mahasiswa.dokumen_seminar_kp.length === 0) {
-      throw new APIError(`Waduh, Dokumen untuk mahasiswa dengan NIM ${nim} tidak ditemukan! 😭`, 404);
+      throw new APIError(`Dokumen untuk mahasiswa dengan NIM ${nim} tidak ditemukan!`, 404);
     }
 
     const semester = MahasiswaHelper.getSemesterByNIM(nim);
@@ -278,7 +278,7 @@ export default class SeminarKpService {
 
     return {
       response: true,
-      message: "Berhasil mendapatkan dokumen mahasiswa! 😁",
+      message: "Berhasil mendapatkan dokumen mahasiswa!",
       data: {
         ...data_mahasiswa,
         semester,
@@ -290,7 +290,7 @@ export default class SeminarKpService {
   public static async postTerimaDokumenSeminarKP(id: string, komentar?: string) {
     const dokumen = await SeminarKpRepository.getDokumenSeminarKPById(id);
     if (!dokumen) {
-      throw new APIError("Waduh, Dokumen tidak ditemukan! 😭", 404);
+      throw new APIError("Dokumen tidak ditemukan!", 404);
     }
 
     const validasi = await SeminarKpRepository.updateDokumenSeminarKP(id, {
@@ -306,7 +306,7 @@ export default class SeminarKpService {
   public static async postTolakDokumenSeminarKP(id: string, komentar: string) {
     const dokumen = await SeminarKpRepository.getDokumenSeminarKPById(id);
     if (!dokumen) {
-      throw new APIError("Waduh, Dokumen tidak ditemukan! 😭", 404);
+      throw new APIError("Dokumen tidak ditemukan!", 404);
     }
 
     const tolak = await SeminarKpRepository.updateDokumenSeminarKP(id, {

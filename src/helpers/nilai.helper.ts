@@ -17,7 +17,7 @@ const BOBOT_NILAI_AKHIR = {
 export default class NilaiHelper {
   public static async validateNilaiInput(nilai: number, fieldName: string) {
     if (nilai < 0 || nilai > 100) {
-      throw new APIError(`Waduh, ${fieldName} harus bernilai antara 0 dan 100! 😭`, 400);
+      throw new APIError(`${fieldName} harus bernilai dari 0 hingga 100!`, 400);
     }
   }
 

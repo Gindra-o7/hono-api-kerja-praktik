@@ -106,21 +106,21 @@ export default class StepHelper {
     if (STEP_2.includes(jenis)) {
       currentStep = 2;
       if (!(await this.validasiStepDokumen(1, id_pendaftaran_kp))) {
-        throw new APIError("Waduh, Berkas Pendaftaran kamu belum divalidasi nih! 😭", 403);
+        throw new APIError("Berkas Pendaftaran belum divalidasi!", 403);
       }
     } else if (STEP_3.includes(jenis)) {
       currentStep = 3;
       if (!(await this.validasiStepDokumen(2, id_pendaftaran_kp))) {
-        throw new APIError("Waduh, ID Surat Undangan kamu belum divalidasi nih! 😭", 403);
+        throw new APIError("ID Surat Undangan belum divalidasi!", 403);
       }
     } else if (STEP_5.includes(jenis)) {
       currentStep = 5;
       if (!(await this.validasiStepDokumen(3, id_pendaftaran_kp))) {
-        throw new APIError("Waduh, Surat Undangan kamu belum divalidasi nih! 😭", 403);
+        throw new APIError("Surat Undangan kamu belum divalidasi!", 403);
       }
 
       if (!(await this.cekJadwalSelesai(id_pendaftaran_kp))) {
-        throw new APIError("Waduh, Seminar KP kamu selesai nih! 😭", 403);
+        throw new APIError("Seminar KP kamu selesai dilaksanakan!", 403);
       }
     }
   }
@@ -130,7 +130,7 @@ export default class StepHelper {
       const mahasiswa = await SeminarKpRepository.findNIMByPendaftaranKp(id_pendaftaran_kp);
       const nim = mahasiswa?.nim;
       if (!nim) {
-        throw new APIError("Waduh, NIM tidak ditemukan! 😭", 404);
+        throw new APIError("NIM tidak ditemukan!", 404);
       }
 
       const validasi = await MahasiswaService.validasiPersyaratanSeminarKp(nim);
