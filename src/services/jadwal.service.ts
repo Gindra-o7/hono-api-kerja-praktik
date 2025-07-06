@@ -113,24 +113,28 @@ export default class JadwalService {
 
     const mahasiswa = await MahasiswaService.validateMahasiswaExists(data.nim);
 
-    if (waktu_mulai && waktu_mulai < new Date()) {
-      throw new APIError(`Waktu selesai tidak boleh lebih awal dari waktu saat ini.`, 400);
-    }
-
     const timeZone = "Asia/Jakarta";
     const today = new Date();
 
-    // 1. Buat "Mesin Konversi" yang berpikir dalam timezone Asia/Jakarta
     const dateFormatter = new Intl.DateTimeFormat("sv-SE", {
       timeZone: timeZone,
     });
 
-    // 2. Dapatkan string tanggal untuk awal rentang (hari ini)
-    const currentDate = new Date(dateFormatter.format(today)); // -> "2025-06-16"
+    const currentDate = new Date(dateFormatter.format(today));
 
-    if (waktu_mulai && waktu_selesai < currentDate){
-      throw new APIError(`Waktu tidak boleh kurang dari waktu sekarang nih! 😭`, 400);
+    if (waktu_mulai < currentDate || waktu_selesai < currentDate){
+      throw new APIError(`Waktu yang di masukkan tidak boleh lebih awal dari waktu saat ini.`, 400);
     }
+
+    await this.validateScheduleConflicts(
+      data.nim,
+      data.nip_penguji,
+      pendaftaran.nip_pembimbing,
+      data.nama_ruangan,
+      tanggal,
+      waktu_mulai,
+      waktu_selesai
+    );
 
     const jadwalInput: CreateJadwalInput = {
       tanggal,
@@ -217,16 +221,14 @@ export default class JadwalService {
     const timeZone = "Asia/Jakarta";
     const today = new Date();
 
-    // 1. Buat "Mesin Konversi" yang berpikir dalam timezone Asia/Jakarta
     const dateFormatter = new Intl.DateTimeFormat("sv-SE", {
       timeZone: timeZone,
     });
 
-    // 2. Dapatkan string tanggal untuk awal rentang (hari ini)
-    const currentDate = new Date(dateFormatter.format(today)); // -> "2025-06-16"
+    const currentDate = new Date(dateFormatter.format(today));
 
-    if (waktu_mulai && waktu_selesai < currentDate){
-      throw new APIError(`Waduh, Waktu tidak boleh kurang dari waktu sekarang nih! 😭`, 400);
+    if (waktu_mulai < currentDate || waktu_selesai < currentDate){
+      throw new APIError(`Waktu mulai tidak boleh lebih awal dari waktu saat ini.`, 400);
     }
 
     if (data.nip_penguji) {
