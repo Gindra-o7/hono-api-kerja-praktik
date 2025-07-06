@@ -198,9 +198,9 @@ export default class NilaiService {
     const step1Valid = await StepHelper.validasiStepDokumen(1, idPendaftaranKp);
     const step2Valid = await StepHelper.validasiStepDokumen(2, idPendaftaranKp);
     const step3Valid = await StepHelper.validasiStepDokumen(3, idPendaftaranKp);
-    const step5Valid = await StepHelper.validasiStep5(5, idPendaftaranKp);
+    const step4Valid = await StepHelper.validasiStep4(4, idPendaftaranKp);
 
-    return step1Valid && step2Valid && step3Valid && step5Valid;
+    return step1Valid && step2Valid && step3Valid && step4Valid;
   }
 
   public static async getAllNilai(tahunAjaranId: number = 0): Promise<AllNilaiResponse> {
