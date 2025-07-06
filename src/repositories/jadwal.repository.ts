@@ -1,5 +1,5 @@
 import prisma from "../infrastructures/db.infrastructure";
-import { jadwal, log_jadwal, status_jadwal, ruangan } from "../generated/prisma";
+import { jadwal, log_jadwal, status_jadwal, ruangan, Prisma } from "../generated/prisma";
 import { CreateJadwalInput, UpdateJadwalInput, LogJadwalInput, JadwalWithRelations, JadwalSayaParams, DataJadwalSeminar, CreateRuanganInput } from "../types/seminar-kp/jadwal.type";
 import { APIError } from "../utils/api-error.util";
 import MahasiswaHelper from "../helpers/mahasiswa.helper";
@@ -358,7 +358,7 @@ export default class JadwalRepository {
     });
   }
 
-  public static async getAllJadwalSeminar(tahunAjaranId: number = 1) {
+  public static async getAllJadwalSeminar(tahunAjaranId: number = 1, dateRange?: { from: Date; to: Date }) {
     await this.updateJadwalStatus();
 
     if (tahunAjaranId === 0) {
@@ -374,15 +374,24 @@ export default class JadwalRepository {
       },
     });
     if (!tahunAjaran) {
-      throw new APIError(`Waduh, Tahun ajaran tidak ditemukan, 😭`, 404);
+      throw new APIError(`Tahun ajaran tidak ditemukan!`, 404);
+    }
+
+    const whereClause: Prisma.jadwalWhereInput = {
+      pendaftaran_kp: {
+        id_tahun_ajaran: tahunAjaranId,
+      },
+    }
+
+    if (dateRange) {
+      whereClause.tanggal = {
+        gte: dateRange.from,
+        lte: dateRange.to,
+      };
     }
 
     const dataJadwal = await prisma.jadwal.findMany({
-      where: {
-        pendaftaran_kp: {
-          id_tahun_ajaran: tahunAjaranId,
-        },
-      },
+      where: whereClause,
       select: {
         id: true,
         mahasiswa: true,
