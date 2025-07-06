@@ -16,6 +16,11 @@ export default class DosenRepository {
       where: {
         nip,
       },
+      select: {
+        email: true,
+        nip: true,
+        nama: true,
+      },
     });
   }
 
