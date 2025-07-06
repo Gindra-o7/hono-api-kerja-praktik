@@ -2,6 +2,18 @@ import { status_dokumen } from "../generated/prisma";
 import { StatusNilai } from "../types/seminar-kp/nilai.type";
 import { APIError } from "../utils/api-error.util";
 
+const BOBOT_PENGUJI = {
+    PENGUASAAN_KEILMUAN: 0.4,
+    KEMAMPUAN_PRESENTASI: 0.2,
+    KESESUAIAN_URGENSI: 0.4,
+};
+
+const BOBOT_NILAI_AKHIR = {
+    NILAI_PENGUJI: 0.2,
+    NILAI_PEMBIMBING: 0.4,
+    NILAI_INSTANSI: 0.4,
+};
+
 export default class NilaiHelper {
   public static async validateNilaiInput(nilai: number, fieldName: string) {
     if (nilai < 0 || nilai > 100) {
@@ -14,7 +26,12 @@ export default class NilaiHelper {
     await this.validateNilaiInput(kemampuanPresentasi, "Kemampuan Presentasi");
     await this.validateNilaiInput(kesesuaianUrgensi, "Kesesuaian Urgensi");
 
-    return parseFloat((penguasaanKeilmuan * 0.4 + kemampuanPresentasi * 0.2 + kesesuaianUrgensi * 0.4).toFixed(2));
+    return parseFloat((
+      penguasaanKeilmuan * BOBOT_PENGUJI.PENGUASAAN_KEILMUAN + 
+      kemampuanPresentasi * BOBOT_PENGUJI.KEMAMPUAN_PRESENTASI + 
+      kesesuaianUrgensi * BOBOT_PENGUJI.KESESUAIAN_URGENSI)
+      .toFixed(2)
+    );
   }
 
   public static async calculateNilaiPembimbing(penyelesaianMasalah: number, bimbinganSikap: number, kualitasLaporan: number) {
@@ -30,7 +47,11 @@ export default class NilaiHelper {
       return null;
     }
     
-    return parseFloat((nilaiPenguji * 0.2 + nilaiPembimbing * 0.4 + nilaiInstansi * 0.4).toFixed(2));
+    return parseFloat((
+      nilaiPenguji * BOBOT_NILAI_AKHIR.NILAI_PENGUJI + 
+      nilaiPembimbing * BOBOT_NILAI_AKHIR.NILAI_PEMBIMBING + 
+      nilaiInstansi * BOBOT_NILAI_AKHIR.NILAI_INSTANSI)
+      .toFixed(2));
   }
 
   public static formatStatusNilai(status: StatusNilai): string {
