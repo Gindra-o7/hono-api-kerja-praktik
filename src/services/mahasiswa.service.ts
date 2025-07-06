@@ -79,20 +79,29 @@ export default class MahasiswaService {
   }
 
   public static async validasiPersyaratanSeminarKp(nim: string) {
-    const selesaiMurojaah = await MahasiswaService.checkMurojaah(nim);
-    const pendaftaranKp = await MahasiswaRepository.getPendaftaranKP(nim).catch(() => null);
+    const [
+      selesaiMurojaah,
+        pendaftaranKp,
+        jumlahBimbingan,
+        dailyReports,
+        nilaiInstansi
+    ] = await Promise.all([
+        // this.checkMurojaah(nim)
+        true,
+        MahasiswaRepository.getPendaftaranKP(nim).catch(() => null),
+        MahasiswaRepository.countBimbinganByNIM(nim),
+        MahasiswaRepository.getDailyReportsByNIM(nim),
+        MahasiswaRepository.getNilaiByNIM(nim)
+    ]);
 
     const masihTerdaftarKP = pendaftaranKp && ["Baru", "Lanjut"].includes(pendaftaranKp.status || "");
-    const level_akses = pendaftaranKp ? pendaftaranKp.level_akses : 0;
 
-    const jumlahBimbingan = await MahasiswaRepository.countBimbinganByNIM(nim);
     const cukupBimbingan = jumlahBimbingan >= 5;
 
-    const dailyReports = await MahasiswaRepository.getDailyReportsByNIM(nim);
-    const semuaDailyReportDisetujui = dailyReports.length > 0 && dailyReports.every((report) => report.status === "Disetujui");
+    const dailyReportsDisetujui = dailyReports.filter((report) => report.status === "Disetujui");
+    const semuaDailyReportDisetujui = dailyReportsDisetujui.length > 22 && dailyReports.every((report) => report.status === "Disetujui");
 
-    const nilai = await MahasiswaRepository.getNilaiByNIM(nim);
-    const sudahNilaiInstansi = nilai && nilai.nilai_instansi !== null;
+    const sudahNilaiInstansi = nilaiInstansi && nilaiInstansi.nilai_instansi !== null;
 
     const semuaSyaratTerpenuhi = selesaiMurojaah && masihTerdaftarKP && cukupBimbingan && semuaDailyReportDisetujui && sudahNilaiInstansi;
 
