@@ -10,24 +10,11 @@ const STEP_2: jenis_dokumen[] = [jenis_dokumen.ID_SURAT_UNDANGAN];
 
 const STEP_3: jenis_dokumen[] = [jenis_dokumen.SURAT_UNDANGAN_SEMINAR_KP];
 
-const STEP_5: jenis_dokumen[] = [
-  jenis_dokumen.BERITA_ACARA_SEMINAR, 
-  jenis_dokumen.LEMBAR_PENGESAHAN_KP, 
-  jenis_dokumen.DAFTAR_HADIR_SEMINAR,
-  jenis_dokumen.REVISI_LAPORAN_TAMBAHAN,
-  jenis_dokumen.SISTEM_KP_FINAL
-];
+const STEP_4: jenis_dokumen[] = [jenis_dokumen.BERITA_ACARA_SEMINAR, jenis_dokumen.LEMBAR_PENGESAHAN_KP, jenis_dokumen.DAFTAR_HADIR_SEMINAR, jenis_dokumen.REVISI_LAPORAN_TAMBAHAN, jenis_dokumen.SISTEM_KP_FINAL];
 
-const STEP_5_WAJIB: jenis_dokumen[] = [
-  jenis_dokumen.BERITA_ACARA_SEMINAR, 
-  jenis_dokumen.LEMBAR_PENGESAHAN_KP, 
-  jenis_dokumen.DAFTAR_HADIR_SEMINAR,
-];
+const STEP_4_WAJIB: jenis_dokumen[] = [jenis_dokumen.BERITA_ACARA_SEMINAR, jenis_dokumen.LEMBAR_PENGESAHAN_KP, jenis_dokumen.DAFTAR_HADIR_SEMINAR];
 
-const STEP_5_OPSIONAL: jenis_dokumen[] = [
-  jenis_dokumen.REVISI_LAPORAN_TAMBAHAN,
-  jenis_dokumen.SISTEM_KP_FINAL
-];
+const STEP_4_OPSIONAL: jenis_dokumen[] = [jenis_dokumen.REVISI_LAPORAN_TAMBAHAN, jenis_dokumen.SISTEM_KP_FINAL];
 
 export default class StepHelper {
   public static async cekJadwalSelesai(id_pendaftaran_kp: string): Promise<boolean> {
@@ -61,8 +48,8 @@ export default class StepHelper {
       case 3:
         dokumenList = STEP_3;
         break;
-      case 5:
-        dokumenList = STEP_5;
+      case 4:
+        dokumenList = STEP_4;
         break;
       default:
         return false;
@@ -78,19 +65,19 @@ export default class StepHelper {
     return true;
   }
 
-  public static async validasiStep5(step: number, id_pendaftaran_kp: string): Promise<boolean> {
-    if (step !== 5) {
+  public static async validasiStep4(step: number, id_pendaftaran_kp: string): Promise<boolean> {
+    if (step !== 3) {
       return await this.validasiStepDokumen(step, id_pendaftaran_kp);
     }
 
-    for (const jenisDokumen of STEP_5_WAJIB) {
+    for (const jenisDokumen of STEP_4_WAJIB) {
       const dokumen = await SeminarKpRepository.getDokumenSeminarKPByJenisAndPendaftaranId(jenisDokumen, id_pendaftaran_kp);
       if (!dokumen || dokumen.status !== "Divalidasi") {
         return false;
       }
     }
 
-    for (const jenisDokumen of STEP_5_OPSIONAL) {
+    for (const jenisDokumen of STEP_4_OPSIONAL) {
       const dokumen = await SeminarKpRepository.getDokumenSeminarKPByJenisAndPendaftaranId(jenisDokumen, id_pendaftaran_kp);
       if (dokumen && dokumen.status !== "Divalidasi") {
         return false;
@@ -113,12 +100,11 @@ export default class StepHelper {
       if (!(await this.validasiStepDokumen(2, id_pendaftaran_kp))) {
         throw new APIError("ID Surat Undangan belum divalidasi!", 403);
       }
-    } else if (STEP_5.includes(jenis)) {
-      currentStep = 5;
+    } else if (STEP_4.includes(jenis)) {
+      currentStep = 4;
       if (!(await this.validasiStepDokumen(3, id_pendaftaran_kp))) {
         throw new APIError("Surat Undangan kamu belum divalidasi!", 403);
       }
-
       if (!(await this.cekJadwalSelesai(id_pendaftaran_kp))) {
         throw new APIError("Seminar KP kamu selesai dilaksanakan!", 403);
       }
@@ -134,22 +120,22 @@ export default class StepHelper {
       }
 
       const validasi = await MahasiswaService.validasiPersyaratanSeminarKp(nim);
-      if (validasi.semua_syarat_terpenuhi){
+      if (validasi.semua_syarat_terpenuhi) {
         return true;
       } else {
         return false;
       }
     }
 
-    if (step === 6) {
+    if (step === 5) {
       const isValidStep3 = await this.validasiStepDokumen(3, id_pendaftaran_kp);
-      const isValidStep5 = await this.validasiStep5(5, id_pendaftaran_kp);
+      const isValidStep4 = await this.validasiStep4(4, id_pendaftaran_kp);
       const isJadwalSelesai = await this.cekJadwalSelesai(id_pendaftaran_kp);
 
-      return isValidStep3 && isValidStep5 && isJadwalSelesai;
+      return isValidStep3 && isValidStep4 && isJadwalSelesai;
     }
 
-    if (step === 5) {
+    if (step === 4) {
       const isValidStep3 = await this.validasiStepDokumen(3, id_pendaftaran_kp);
 
       const isJadwalSelesai = await this.cekJadwalSelesai(id_pendaftaran_kp);
@@ -172,8 +158,8 @@ export default class StepHelper {
       return 2;
     } else if (STEP_3.includes(jenis)) {
       return 3;
-    } else if (STEP_5.includes(jenis)) {
-      return 5;
+    } else if (STEP_4.includes(jenis)) {
+      return 4;
     }
 
     return 0;
@@ -192,7 +178,7 @@ export default class StepHelper {
       //pendaftaran-step3
       "surat-undangan-seminar-kp": jenis_dokumen.SURAT_UNDANGAN_SEMINAR_KP,
 
-      //pasca-seminar-step5
+      //pasca-seminar-step4
       "berita-acara-seminar": jenis_dokumen.BERITA_ACARA_SEMINAR,
       "daftar-hadir-seminar": jenis_dokumen.DAFTAR_HADIR_SEMINAR,
       "lembar-pengesahan-kp": jenis_dokumen.LEMBAR_PENGESAHAN_KP,
@@ -229,13 +215,13 @@ export default class StepHelper {
     for (let step = maxStep; step >= 1; step--) {
       const docsInStep = documents.filter((doc) => this.getStepForDokumen(doc.jenis_dokumen as jenis_dokumen) === step);
 
-      if (step === 5) {
-        const wajibDocs = docsInStep.filter((doc) => STEP_5_WAJIB.includes(doc.jenis_dokumen as jenis_dokumen));
-        const opsionalDocs = docsInStep.filter((doc) => STEP_5_OPSIONAL.includes(doc.jenis_dokumen as jenis_dokumen));
-        
+      if (step === 4) {
+        const wajibDocs = docsInStep.filter((doc) => STEP_4_WAJIB.includes(doc.jenis_dokumen as jenis_dokumen));
+        const opsionalDocs = docsInStep.filter((doc) => STEP_4_OPSIONAL.includes(doc.jenis_dokumen as jenis_dokumen));
+
         const allWajibValidated = wajibDocs.every((doc) => doc.status === "Divalidasi");
         const allOpsionalValidated = opsionalDocs.every((doc) => doc.status === "Divalidasi");
-        
+
         if (allWajibValidated && allOpsionalValidated) {
           return step + 1 <= 6 ? step + 1 : 6;
         }
